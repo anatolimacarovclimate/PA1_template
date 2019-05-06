@@ -1,0 +1,86 @@
+---
+title: "Activity"
+author: "Anatoli Macarov"
+date: "5/2/2019"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+## Activity monitoring data
+
+This assignment makes use of data from a personal activity monitoring device. This device collects data at 5 minute intervals through out the day. The data consists of two months of data from an anonymous individual collected during the months of October and November, 2012 and include the number of steps taken in 5 minute intervals each day.
+
+
+```{r activity}
+activity <- read.csv("activity.csv")
+summary(activity)
+```
+
+## Generated Plots
+
+Histogram of the total number of steps taken each day:
+
+```{r steps, echo=FALSE}
+library(ggplot2)
+act_da <- aggregate(steps ~ date, activity, sum)
+ggplot(act_da, aes(steps)) + geom_histogram(na.rm = TRUE, binwidth = 500) + xlab("Total number of steps per day") + ylab("Frequency")
+```
+
+Mean and median number of steps taken each day:
+```{r mean, echo=FALSE}
+mean(act_da$steps)
+median(act_da$steps)
+```
+Time series plot of the average number of steps taken:
+```{r time, echo=FALSE}
+act_avg <- aggregate(steps ~ interval, activity, mean)
+ggplot(data = act_avg, aes(x=interval, y=steps, group=1)) + geom_line() + xlab("Average number of steps per day") + ylab("Frequency")
+```
+
+The 5-minute interval that, on average, contains the maximum number of steps:
+```{r avg_max, echo=FALSE}
+act_avg <- aggregate(steps ~ interval, activity, mean)
+act_avg[which(act_avg$steps == max(act_avg$steps)), ]
+```
+
+Code to describe and show a strategy for imputing missing data.  
+Number of missing data in the steps column:
+```{r mis_data, echo=FALSE}
+sum(is.na(activity$steps))
+```
+Fill all of the missing values in the dataset. 
+```{r mis_ds, echo=TRUE}
+## Mean for all days
+mean(activity$steps, na.rm = T)
+## Fill with mean value empty rows
+act_imp <- activity
+act_imp$steps[is.na(act_imp$steps)] <- mean(act_imp$steps, na.rm = T)
+```
+
+Histogram of the total number of steps taken each day after missing values are imputed:
+```{r hist_act_imp, echo=FALSE}
+library(ggplot2)
+act_da_imp <- aggregate(steps ~ date, act_imp, sum)
+ggplot(act_da_imp, aes(steps)) + geom_histogram(na.rm = TRUE, binwidth = 500) + xlab("Total number of steps per day") + ylab("Frequency")
+```
+
+Mean and median number of steps taken each day:
+```{r mean_imp, echo=FALSE}
+mean(act_da_imp$steps)
+median(act_da_imp$steps)
+```
+
+Panel plot comparing the average number of steps taken per 5-minute interval across weekdays and weekends:
+```{r avg_week, echo=FALSE}
+act_imp$date <- as.Date(act_imp$date, format = "%Y-%m-%d")
+act_imp$day <- weekdays(act_imp$date)
+
+act_imp$weeks[(act_imp$day == "Saturday" | act_imp$day == "Sunday")] <- "weekend"
+act_imp$weeks[!(act_imp$day == "Saturday" | act_imp$day == "Sunday")] <- "weekdays"
+head(act_imp)
+act_avg_w <- aggregate(steps ~ interval + weeks, act_imp, mean)
+ggplot(data = act_avg_w, aes(x=interval, y=steps, group=1)) + geom_line() + facet_grid(weeks ~ .) + xlab("Average number of steps per day") + ylab("Frequency")
+```
