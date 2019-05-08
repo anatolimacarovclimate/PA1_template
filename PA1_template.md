@@ -24,7 +24,7 @@ Generated Plots
 
 ![](PA1_template_files/figure-markdown_github/steps-1.png)
 
-1.  Mean and median number of steps taken each day:
+2.  Mean and median number of steps taken each day:
 
 <!-- -->
 
@@ -32,16 +32,16 @@ Generated Plots
 
     ## [1] 10765
 
-1.  Time series plot of the average number of steps taken: ![](PA1_template_files/figure-markdown_github/time-1.png)
+3.  Time series plot of the average number of steps taken: ![](PA1_template_files/figure-markdown_github/time-1.png)
 
-2.  The 5-minute interval that, on average, contains the maximum number of steps:
+4.  The 5-minute interval that, on average, contains the maximum number of steps:
 
 <!-- -->
 
     ##     interval    steps
     ## 104      835 206.1698
 
-1.  Code to describe and show a strategy for imputing missing data.
+5.  Code to describe and show a strategy for imputing missing data.
     Number of missing data in the steps column:
 
 <!-- -->
@@ -63,7 +63,7 @@ act_imp <- activity
 act_imp$steps[is.na(act_imp$steps)] <- mean(act_imp$steps, na.rm = T)
 ```
 
-1.  Histogram of the total number of steps taken each day after missing values are imputed: ![](PA1_template_files/figure-markdown_github/hist_act_imp-1.png)
+6.  Histogram of the total number of steps taken each day after missing values are imputed: ![](PA1_template_files/figure-markdown_github/hist_act_imp-1.png)
 
 Mean and median number of steps taken each day:
 
@@ -71,7 +71,7 @@ Mean and median number of steps taken each day:
 
     ## [1] 10766.19
 
-1.  Panel plot comparing the average number of steps taken per 5-minute interval across weekdays and weekends:
+7.  Panel plot comparing the average number of steps taken per 5-minute interval across weekdays and weekends:
 
 <!-- -->
 
